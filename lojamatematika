@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matematika 5️⃣ – Lojëra & Sfida</title>
+<style>
+:root{
+  --bg:#050505;--card:#111;--text:#f5f5f5;--muted:#a8a8a8;
+  --primary:#7c5cff;--primary2:#9b7cff;--green:#25d366;--red:#ff4d5d;
+  --yellow:#ffd34d;--blue:#4da6ff;--shadow:0 12px 35px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#050505;color:var(--text)}
+header{padding:28px 6%;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.logo{font-size:25px;font-weight:900}.logo span{color:var(--primary)}
+.badge{background:#151515;padding:10px 15px;border-radius:999px;box-shadow:var(--shadow);font-weight:800}
+.hero{padding:35px 6% 55px;text-align:center;background:radial-gradient(circle at center,#17122b 0,#050505 60%)}
+.hero h1{font-size:clamp(38px,7vw,72px);margin:15px 0 10px;line-height:1.05}
+.hero h1 span{color:var(--primary)}
+.hero p{font-size:19px;color:var(--muted);max-width:720px;margin:0 auto 25px}
+.container{width:min(1120px,92%);margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.card{background:#111;border-radius:24px;padding:24px;box-shadow:var(--shadow);transition:.2s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-5px)}
+.card .icon{font-size:40px}
+.card h3{margin:12px 0 6px;font-size:21px}.card p{color:var(--muted);min-height:42px}
+button{border:0;border-radius:14px;padding:13px 18px;font-size:16px;font-weight:800;cursor:pointer;background:var(--primary);color:white;transition:.15s}
+button:hover{filter:brightness(1.05);transform:translateY(-1px)}
+button.secondary{background:#1d1830;color:#b9aaff}
+section{margin:30px 0 45px}section>h2{text-align:center;font-size:31px;margin-bottom:20px}
+.game{display:none;background:#111;position:relative;border-radius:28px;padding:28px;box-shadow:var(--shadow);margin:25px 0}
+.game.active{display:block}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.score{background:#29220b;padding:9px 14px;border-radius:12px;font-weight:900;color:#ffd34d}
+.question{font-size:40px;font-weight:900;text-align:center;margin:25px 0}
+.answers{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:600px;margin:auto}
+.answers button{background:#1c1c1c;color:var(--text);font-size:22px;border:1px solid #333}
+.feedback{text-align:center;font-weight:900;font-size:20px;min-height:30px;margin:18px}
+input{padding:14px;border:2px solid #383838;background:#181818;color:white;border-radius:14px;font-size:18px;width:min(360px,100%);outline:none}
+.inputrow{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.timer{font-weight:900;color:var(--primary)}
+.table-wrap{overflow:auto;background:white;border-radius:20px;box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:500px}th,td{padding:14px;border-bottom:1px solid #edf0f7;text-align:center}th{background:#1c1c1c}
+.tip{background:linear-gradient(135deg,#2a240d,#111);border-left:6px solid var(--yellow);padding:20px;border-radius:18px}
+footer{text-align:center;padding:35px;color:var(--muted)}
+.small{font-size:14px;color:var(--muted)}
+@media(max-width:600px){.answers{grid-template-columns:1fr}.question{font-size:32px}}
+
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;max-width:270px;margin:10px auto}
+.keypad button{min-height:48px;background:#1f1f1f;color:white;border:1px solid #444;font-size:18px}
+.keypad .clear{background:#ff3f36}
+.keypad .go{background:#0798c5}
+.keypad .zero{grid-column:2}
+.tarik-disabled{pointer-events:none;opacity:.55}\n
+.win-screen{display:none;position:absolute;inset:0;z-index:50;text-align:center;padding:70px 18px;margin:0;max-width:none;min-height:100%;border:2px solid #ffd34d;border-radius:24px;background:#151515;overflow:hidden}
+.win-screen.show{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.win-screen h2{font-size:42px;margin:8px 0;color:#ffd34d}
+.win-screen p{font-size:20px;color:#ddd}
+.pixel-art{width:180px;height:210px;margin:10px auto 18px;position:relative;image-rendering:pixelated}
+.pixel-art .head{position:absolute;left:62px;top:38px;width:56px;height:56px;background:#b96f45;box-shadow:-8px 8px #b96f45,8px 8px #b96f45,0 -8px #222,8px -8px #222,-8px 0 #222}
+.pixel-art .hair{position:absolute;left:54px;top:26px;width:72px;height:28px;background:#161616;box-shadow:-8px 8px #161616,8px 8px #161616}
+.pixel-art .shirt{position:absolute;left:48px;top:98px;width:84px;height:78px;background:#203a9b;box-shadow:-10px 12px #203a9b,10px 12px #203a9b}
+.pixel-art .arms{position:absolute;left:22px;top:100px;width:136px;height:18px;background:#b96f45;transform:rotate(-5deg);box-shadow:0 32px #b96f45}
+.pixel-art .cup{position:absolute;left:59px;top:0;width:62px;height:22px;background:#ffd34d;box-shadow:-8px 8px #ffd34d,8px 8px #ffd34d,0 16px #fff,-16px 16px #ffd34d,16px 16px #ffd34d}
+.pixel-art .leg{position:absolute;left:60px;top:174px;width:22px;height:36px;background:#151515;box-shadow:38px 0 #151515}
+.confetti{position:absolute;inset:0;pointer-events:none}
+.confetti i{position:absolute;width:8px;height:16px;animation:fall 1.8s linear infinite}
+@keyframes fall{from{transform:translateY(-40px) rotate(0)}to{transform:translateY(360px) rotate(360deg)}}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🧠 <span>Matematika 5</span></div>
+  <div class="badge">🇦🇱 Mëso • Luaj • Përpar</div>
+</header>
+
+<div class="hero">
+  <div style="font-size:16px;font-weight:900;color:#b9aaff;margin-bottom:22px;letter-spacing:1px">Maruar Nga Omer Halili</div>
+  <div style="font-size:60px">➗ ✖️ ➕ ➖</div>
+  <h1>Matematika mund të jetë <span>argëtuese!</span></h1>
+  <p>Lojëra, ushtrime dhe sfida për nxënësit e klasës së 5-të. Zgjidh një lojë dhe provo sa pikë mund të fitosh!</p>
+  <button onclick="document.getElementById('games').scrollIntoView({behavior:'smooth'})">🎮 Fillo lojën</button>
+</div>
+
+<main class="container">
+<section id="games">
+<h2>🎮 Zgjidh një lojë</h2>
+<div class="grid">
+  <div class="card"><div class="icon">⚡</div><h3>Rrufeja e Matematikës</h3><p>10 pyetje të shpejta me pikë për çdo përgjigje të saktë.</p><button onclick="startGame('quiz')">Luaj</button></div>
+  <div class="card"><div class="icon">🧩</div><h3>Gjej numrin</h3><p>Gjej numrin misterioz bazuar në të dhënat që të jepen.</p><button onclick="startGame('guess')">Luaj</button></div>
+  <div class="card"><div class="icon">⏱️</div><h3>Sfidë 60 sekonda</h3><p>Sa veprime të sakta mund të zgjidhësh në një minutë?</p><button onclick="startGame('speed')">Luaj</button></div>
+  <div class="card"><div class="icon">🪢</div><h3>Matematika Mode</h3><p>Tarik Tambang Matematika! Zgjidh saktë dhe tërhiq litarin në anën tënde.</p><button onclick="startGame('tarik')">Luaj</button></div>
+
+</div>
+</section>
+
+<div id="quiz" class="game">
+<div class="topbar"><h2>⚡ Rrufeja e Matematikës</h2><div class="score">Pikët: <span id="qscore">0</span>/10</div></div>
+<div class="question" id="qtext"></div><div class="answers" id="answers"></div><div class="feedback" id="qfeedback"></div>
+<button class="secondary" onclick="closeGames()">← Kthehu te lojërat</button>
+</div>
+
+<div id="guess" class="game">
+<div class="topbar"><h2>🧩 Gjej numrin</h2><div class="score">Raundi: <span id="gturn">1</span>/5</div></div>
+<p id="ghint" style="text-align:center;font-size:20px"></p>
+<div class="inputrow"><input id="ginput" type="number" placeholder="Shkruaj numrin"><button onclick="checkGuess()">Kontrollo</button></div>
+<div class="feedback" id="gfeedback"></div>
+<button class="secondary" onclick="closeGames()">← Kthehu te lojërat</button>
+</div>
+
+<div id="speed" class="game">
+<div class="topbar"><h2>⏱️ Sfidë 60 sekonda</h2><div class="score">Koha: <span id="time">60</span>s</div><div class="score">Saktë: <span id="sscore">0</span></div></div>
+<div class="question" id="stext"></div>
+<div class="inputrow"><input id="sinput" type="number" placeholder="Përgjigjja"><button onclick="checkSpeed()">Përgjigju</button></div>
+<div class="feedback" id="sfeedback"></div>
+<button class="secondary" onclick="closeGames()">← Kthehu te lojërat</button>
+</div>
+
+
+
+<div id="tarik" class="game">
+<div class="topbar">
+  <h2>🪢 Matematika Mode</h2>
+  <div class="score">Player 1: <span id="p1score">0</span> — Player 2: <span id="p2score">0</span></div>
+</div>
+
+<div id="operationChooser" style="text-align:center;margin:15px 0">
+  <h3 style="margin-bottom:8px">Choose what you want to play</h3>
+  <p style="color:var(--muted);margin-top:0">Pick an operation. The game starts after a 3-second countdown.</p>
+  <div class="grid" style="grid-template-columns:repeat(4,1fr);max-width:650px;margin:14px auto">
+    <button onclick="startTarikOperation('+')" id="opPlus">➕ Plus</button>
+    <button onclick="startTarikOperation('-')" id="opMinus">➖ Minus</button>
+    <button onclick="startTarikOperation('×')" id="opTimes">✖️ Times</button>
+    <button onclick="startTarikOperation('÷')" id="opDivide">➗ Division</button>
+  </div>
+</div>
+
+<div id="countdown" style="display:none;text-align:center;font-size:72px;font-weight:900;color:#ffd34d;margin:18px 0">3</div>
+<div id="tfeedback" class="feedback">Choose an operation to begin!</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+  <div class="card" style="text-align:center">
+    <h3>Player 1</h3>
+    <div class="question" id="p1text" style="font-size:30px">Choose an operation</div>
+    <input id="p1input" type="text" readonly inputmode="none" autocomplete="off" style="text-align:center" placeholder="Answer" disabled>
+    <div class="keypad">
+      <button onclick="pressKey('p1','1')">1</button><button onclick="pressKey('p1','2')">2</button><button onclick="pressKey('p1','3')">3</button>
+      <button onclick="pressKey('p1','4')">4</button><button onclick="pressKey('p1','5')">5</button><button onclick="pressKey('p1','6')">6</button>
+      <button onclick="pressKey('p1','7')">7</button><button onclick="pressKey('p1','8')">8</button><button onclick="pressKey('p1','9')">9</button>
+      <button class="clear" onclick="clearKeypad('p1')">C</button><button class="zero" onclick="pressKey('p1','0')">0</button><button class="go" onclick="submitKeypad('p1')">GO</button>
+    </div>
+    <div id="p1feedback" class="feedback"></div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <h3>Player 2</h3>
+    <div class="question" id="p2text" style="font-size:30px">Choose an operation</div>
+    <input id="p2input" type="text" readonly inputmode="none" autocomplete="off" style="text-align:center" placeholder="Answer" disabled>
+    <div class="keypad">
+      <button onclick="pressKey('p2','1')">1</button><button onclick="pressKey('p2','2')">2</button><button onclick="pressKey('p2','3')">3</button>
+      <button onclick="pressKey('p2','4')">4</button><button onclick="pressKey('p2','5')">5</button><button onclick="pressKey('p2','6')">6</button>
+      <button onclick="pressKey('p2','7')">7</button><button onclick="pressKey('p2','8')">8</button><button onclick="pressKey('p2','9')">9</button>
+      <button class="clear" onclick="clearKeypad('p2')">C</button><button class="zero" onclick="pressKey('p2','0')">0</button><button class="go" onclick="submitKeypad('p2')">GO</button>
+    </div>
+    <div id="p2feedback" class="feedback"></div>
+  </div>
+</div>
+
+<div style="margin:25px auto;max-width:850px;text-align:center">
+  <div style="height:18px;background:#292929;border-radius:999px;position:relative;overflow:hidden">
+    <div style="position:absolute;left:0;top:0;bottom:0;width:50%;background:#333"></div>
+    <div style="position:absolute;right:0;top:0;bottom:0;width:50%;background:#333"></div>
+    <div id="rope" style="position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:42px;height:26px;background:#c58a4b;border-radius:10px;transition:left .25s"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;margin-top:8px;font-weight:800"><span>Player 1</span><span>Player 2</span></div>
+</div>
+
+<div id="winScreen" class="win-screen">
+  <div class="confetti"><i style="left:10%;top:5%;background:#ffd34d"></i><i style="left:25%;top:0%;background:#7c5cff"></i><i style="left:75%;top:3%;background:#4da6ff"></i><i style="left:90%;top:8%;background:#25d366"></i></div>
+  <div class="pixel-art"><div class="cup"></div><div class="hair"></div><div class="head"></div><div class="arms"></div><div class="shirt"></div><div class="leg"></div></div>
+  <h2 id="winnerText">🏆 Player Wins!</h2>
+  <p id="winnerScore"></p>
+</div>
+
+
+
+<script>
+const $=id=>document.getElementById(id);
+function closeGames(){document.querySelectorAll('.game').forEach(x=>x.classList.remove('active'));window.scrollTo({top:document.getElementById('games').offsetTop-20,behavior:'smooth'});}
+function startGame(type){
+ closeGames(); $(type).classList.add('active'); window.scrollTo({top:$(type).offsetTop-15,behavior:'smooth'});
+ if(type==='quiz') initQuiz();
+ if(type==='guess') initGuess();
+ if(type==='speed') initSpeed();
+ if(type==='tarik') initTarik();
+}
+
+// QUIZ
+let quiz=[],qi=0,qs=0;
+function makeQ(){
+ let a=Math.floor(Math.random()*90)+10,b=Math.floor(Math.random()*20)+2;
+ let ops=['+','-','×'];let op=ops[Math.floor(Math.random()*ops.length)];
+ if(op==='-' && b>a)[[a,b]=[b,a]];
+ let ans=op==='+'?a+b:op==='-'?a-b:a*b;
+ return {text:`${a} ${op} ${b} = ?`,ans};
+}
+function initQuiz(){qi=0;qs=0;$('qscore').textContent=0;nextQuiz();}
+function nextQuiz(){
+ if(qi>=10){$('qtext').textContent=`🎉 Mbarove! ${qs}/10 përgjigje të sakta!`;$('answers').innerHTML='';return;}
+ quiz=makeQ();$('qtext').textContent=quiz.text;$('qfeedback').textContent='';
+ let opts=new Set([quiz.ans]);while(opts.size<4)opts.add(quiz.ans+Math.floor(Math.random()*21)-10);
+ $('answers').innerHTML=[...opts].sort(()=>Math.random()-.5).map(x=>`<button onclick="answerQuiz(${x})">${x}</button>`).join('');
+}
+function answerQuiz(x){if(x===quiz.ans){qs++;$('qfeedback').textContent='✅ Saktë!';}else $('qfeedback').textContent=`❌ Jo. Përgjigjja është ${quiz.ans}.`;qi++;$('qscore').textContent=qs;setTimeout(nextQuiz,650);}
+
+// GUESS
+let secret=0,gturn=1;
+function initGuess(){gturn=1;newGuess();}
+function newGuess(){
+ secret=Math.floor(Math.random()*91)+10;$('gturn').textContent=gturn;
+ $('ghint').textContent=`Mendoj për një numër nga 10 deri në 100. Ai është ${secret%2===0?'numër çift':'numër tek'} dhe është ${secret>50?'më i madh':'më i vogël'} se 50. Gjeje!`;
+ $('ginput').value='';$('gfeedback').textContent='';
+}
+function checkGuess(){
+ let n=Number($('ginput').value);
+ if(!n)return;
+ if(n===secret){$('gfeedback').textContent='🎉 E gjete!';gturn++;if(gturn<=5)setTimeout(newGuess,700);else $('ghint').textContent='🏆 Mbarove 5 raunde!';}
+ else $('gfeedback').textContent=n<secret?'⬆️ Provo një numër më të madh.':'⬇️ Provo një numër më të vogël.';
+}
+
+// SPEED
+let speedAns=0,speedScore=0,time=60,sTimer=null;
+function initSpeed(){
+ clearInterval(sTimer);speedScore=0;time=60;$('sscore').textContent=0;$('time').textContent=60;$('sfeedback').textContent='';
+ newSpeed();$('sinput').focus();
+ sTimer=setInterval(()=>{time--;$('time').textContent=time;if(time<=0){clearInterval(sTimer);$('stext').textContent=`⏰ Koha mbaroi!`;$('sfeedback').textContent=`Rezultati yt: ${speedScore} të sakta.`;}},1000);
+}
+function newSpeed(){let a=Math.floor(Math.random()*30)+2,b=Math.floor(Math.random()*12)+2;speedAns=a*b;$('stext').textContent=`${a} × ${b} = ?`;$('sinput').value='';}
+function checkSpeed(){if(time<=0)return;let x=Number($('sinput').value);if(x===speedAns){speedScore++;$('sscore').textContent=speedScore;$('sfeedback').textContent='⚡ Saktë!';newSpeed();}else{$('sfeedback').textContent='❌ Provo përsëri!';$('sinput').select();}}
+
+
+// TWO-PLAYER MATH TUG OF WAR
+let tarikAns=0, tarikPos=0, p1score=0, p2score=0, currentOp='+';
+function initTarik(){
+  $('winScreen').classList.remove('show');
+  tarikPos=0;p1score=0;p2score=0;currentOp=null;
+  $('p1score').textContent=0;$('p2score').textContent=0;
+  $('p1feedback').textContent='';$('p2feedback').textContent='';
+  $('tfeedback').textContent='Choose an operation to begin!';
+  $('operationChooser').style.display='block';
+  $('countdown').style.display='none';
+  ['p1input','p2input'].forEach(id=>$(id).disabled=true);
+  ['p1text','p2text'].forEach(id=>$(id).textContent='Choose an operation');
+}
+function startTarikOperation(op){
+  currentOp=op;
+  $('operationChooser').style.display='none';
+  $('countdown').style.display='block';
+  $('tfeedback').textContent='Get ready!';
+  ['p1input','p2input'].forEach(id=>$(id).disabled=true);
+
+  let count=3;
+  $('countdown').textContent=count;
+  const timer=setInterval(()=>{
+    count--;
+    if(count>0){
+      $('countdown').textContent=count;
+    }else{
+      clearInterval(timer);
+      $('countdown').style.display='none';
+      ['p1input','p2input'].forEach(id=>$(id).disabled=false);
+      $('tfeedback').textContent='GO! 💪';
+      newTarik();
+      $('p1input').focus();
+    }
+  },1000);
+}
+function setOperation(op){
+  currentOp=op;
+}
+function makeTarikQuestion(){
+  let a,b;
+  if(currentOp==='+'){
+    a=Math.floor(Math.random()*41)+10;
+    b=Math.floor(Math.random()*41)+10;
+  }else if(currentOp==='-'){
+    a=Math.floor(Math.random()*41)+20;
+    b=Math.floor(Math.random()*20)+1;
+    if(b>a)[a,b]=[b,a];
+  }else if(currentOp==='×'){
+    // Smaller multiplication questions suitable for what you have learned so far.
+    a=Math.floor(Math.random()*10)+1;
+    b=Math.floor(Math.random()*10)+1;
+  }else{
+    // Exact division with small numbers (no decimals).
+    b=Math.floor(Math.random()*9)+2;
+    const quotient=Math.floor(Math.random()*9)+1;
+    a=b*quotient;
+  }
+  return {
+    text:`${a} ${currentOp} ${b} = ?`,
+    ans:currentOp==='+'?a+b:currentOp==='-'?a-b:currentOp==='×'?a*b:a/b
+  };
+}
+function newTarik(){
+  if(!currentOp) return;
+  let q=makeTarikQuestion();
+  tarikAns=q.ans;
+  $('p1text').textContent=q.text;
+  $('p2text').textContent=q.text;
+  p1answer='';p2answer='';
+  $('p1input').value='';$('p2input').value='';
+}
+function updateRope(){
+  let pct=Math.max(10,Math.min(90,50+tarikPos*8));
+  $('rope').style.left=pct+'%';
+}
+let p1answer='', p2answer='';
+function keyPress(player,digit){
+  let value=player===1?p1answer:p2answer;
+  if(value.length>=6)return;
+  value+=digit;
+  if(player===1)p1answer=value;else p2answer=value;
+  $('p'+player+'input').value=value;
+}
+function clearKey(player){
+  if(player===1)p1answer='';else p2answer='';
+  $('p'+player+'input').value='';
+}
+
+
+function pressKey(playerId,key){
+  const input=$(playerId+'input');
+  if(input.disabled)return;
+  if(input.value.length<6)input.value+=key;
+}
+function clearKeypad(playerId){$(playerId+'input').value='';}
+function submitKeypad(playerId){checkPlayer(playerId==='p1'?1:2);}
+
+function playTone(freq,duration,type='sine',volume=0.06){
+  try{
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    if(!AudioCtx)return;
+    const ctx=new AudioCtx(),osc=ctx.createOscillator(),gain=ctx.createGain();
+    osc.type=type;osc.frequency.value=freq;gain.gain.value=volume;
+    osc.connect(gain);gain.connect(ctx.destination);osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+duration);
+    osc.stop(ctx.currentTime+duration);
+  }catch(e){}
+}
+function playCorrectSound(){playTone(660,.09);setTimeout(()=>playTone(880,.12),90);}
+function playWrongSound(){playTone(180,.18,'square',.04);}
+function playWinSound(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>playTone(f,.18,'triangle',.08),i*130));}
+function showWin(player){
+  $('p1input').disabled=true;$('p2input').disabled=true;
+  $('winnerText').textContent=`🏆 Player ${player} Wins!`;
+  $('winnerScore').textContent=`Final score: Player 1 ${p1score} — Player 2 ${p2score}`;
+  $('winScreen').classList.add('show');
+  playWinSound();
+}
+function restartTarik(){$('winScreen').classList.remove('show');initTarik();}
+
+function checkPlayer(player){
+  let input=$(player===1?'p1input':'p2input');
+  let feedback=$(player===1?'p1feedback':'p2feedback');
+  let x=Number(input.value);
+  if(input.value==='')return;
+  if(x===tarikAns){
+    if(player===1){p1score++;tarikPos++;$('p1score').textContent=p1score;}
+    else{p2score++;tarikPos--;$('p2score').textContent=p2score;}
+    feedback.textContent='✅ Correct! Pull!';
+    $('tfeedback').textContent=`Player ${player} pulled the rope!`;
+    playCorrectSound();
+  }else{
+    feedback.textContent='❌ Wrong answer!';
+    playWrongSound();
+    return;
+  }
+  updateRope();
+  if(p1score>=5 || p2score>=5){showWin(player);return;}
+  setTimeout(newTarik,500);
+}
+</script>
+</body>
+</html>
